@@ -65,17 +65,37 @@ Los archivos optimizados estarán en `/dist`
 
 ### ✅ Implementado
 
-- **Portal de Reservas**
+- **Portal de Reservas (Cliente)**
   - Selección de servicios con imágenes
   - Selector de fecha y hora
   - Formulario de información del cliente
   - Confirmación con número de referencia
   - Integración con Google Calendar
-
-- **Gestión de Citas**
-  - Búsqueda por número de referencia
-  - Visualización de detalles
+  - Búsqueda de citas por referencia
   - Cancelación de citas
+
+- **Panel de Administración**
+  - Sistema de autenticación
+  - Dashboard con estadísticas en tiempo real
+  - Gestión completa de citas
+  - Manejo de estados múltiples:
+    - ✅ Confirmada
+    - 🟡 En Curso
+    - ✅ Completada
+    - ❌ Cancelada
+    - 🔴 No Asistió (No-Show)
+    - 🟠 Llegó Tarde
+  - Historial de cambios de estado
+  - Filtros avanzados (estado, fecha, búsqueda)
+  - Notas y observaciones por cita
+  - Resumen financiero
+
+- **Reglas de Negocio**
+  - Política de cancelación (2 horas)
+  - Manejo de llegadas tarde (>15 min)
+  - Penalización por no-show (50%)
+  - Validaciones de disponibilidad
+  - Notificaciones automáticas (simuladas)
 
 - **UI/UX**
   - Diseño responsive (móvil y desktop)
@@ -83,14 +103,16 @@ Los archivos optimizados estarán en `/dist`
   - Estados de carga
   - Validación de formularios
   - Feedback visual
+  - Dashboard intuitivo
 
 ### 🔄 Pendiente (Requiere Backend)
 
-- Consumo de APIs reales
-- Autenticación de usuarios
-- Historial de citas
-- Notificaciones por email/SMS
+- Consumo de APIs reales  
+- Notificaciones por email/SMS reales
+- Historial de citas completo
+- Reportes y analytics avanzados
 - Pasarela de pagos
+- Gestión de recursos y servicios desde admin
 
 ## 🔗 Integración con Backend
 
@@ -155,6 +177,74 @@ Mientras el backend no esté disponible, el frontend usa datos mock:
 - `npm run build` - Build para producción
 - `npm run preview` - Preview del build
 - `npm run lint` - Ejecuta ESLint
+
+## 🔐 Panel de Administración
+
+El sistema incluye un panel completo para gestionar las citas y manejar diferentes escenarios.
+
+### Acceso
+
+- **URL**: `http://localhost:5173/admin/login`
+- **Credenciales de prueba**:
+  - Email: `admin@agenda.com`
+  - Contraseña: `admin123`
+
+### Funcionalidades
+
+1. **Dashboard**
+   - Estadísticas del día (citas, completadas, ingresos)
+   - Vista rápida de citas de hoy
+   - Acceso rápido a funciones principales
+
+2. **Gestión de Citas**
+   - Lista completa de todas las citas
+   - Filtros por estado, fecha, y búsqueda
+   - Vista detallada de cada cita
+   - Cambio de estado con notas
+   - Historial completo de cambios
+
+3. **Estados y Escenarios**
+
+   **Cliente Llegó** → Marcar como "En Curso"
+   - Servicio comienza normalmente
+   - Bloquea el horario del profesional
+
+   **Llegó Tarde** → Indicar retraso
+   - Registra tiempo de retraso
+   - Aplica reglas según minutos tarde:
+     - 10-15 min: Advertencia
+     - 15-30 min: Cargo extra + servicio acortado
+     - >30 min: Opción de reagendar
+
+   **No Asistió (No-Show)** → Penalización
+   - Cargo automático del 50%
+   - Registro en historial del cliente
+   - 3 no-shows = Requerir depósito
+
+   **Completada** → Finalizar servicio
+   - Confirma cobro
+   - Libera al profesional
+   - Envía notificación de agradecimiento
+
+   **Cancelada** → Por cliente o admin
+   - Aplica política de cancelación
+   - Notifica a todas las partes
+   - Libera el horario
+
+4. **Reglas de Negocio**
+   - Ver `BUSINESS_RULES.md` para documentación completa
+   - Políticas de cancelación automáticas
+   - Validaciones de tiempo
+   - Cálculo de penalizaciones
+
+### Navegación
+
+```
+/admin/login         - Inicio de sesión
+/admin/dashboard     - Panel principal
+/admin/appointments  - Lista de citas
+/admin/appointments/:id - Detalle de cita
+```
 
 ## 🤝 Colaboración con Backend
 
